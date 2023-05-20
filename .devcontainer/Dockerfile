@@ -21,11 +21,11 @@ RUN apt-get -y install git procps lsb-release wget
 RUN apt-get install -y libicu[0-9][0-9]
 
 # Install devtools for opencv
-RUN apt-get install -y build-essential cmake unzip pkg-config manpages-dev gdb\
+RUN apt-get install -y build-essential cmake unzip pkg-config manpages-dev gdb g++\
     # Install opencv image tools
     && apt-get install -y libjpeg-dev libpng-dev libtiff-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev libatlas-base-dev gfortran python3-dev libgtk-3-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev libjpeg-dev libpng-dev libtiff-dev gfortran openexr libatlas-base-dev libtbb2 libtbb-dev libdc1394-22-dev libopenexr-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
 
-# Install OpenCV
+# Install OpenCV by compiling it.
 WORKDIR /opencv
 RUN wget -O opencv.zip https://github.com/opencv/opencv/archive/4.7.0.zip \
     && wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.7.0.zip \
@@ -46,6 +46,9 @@ RUN cmake -D CMAKE_BUILD_TYPE=RELEASE \
 	-D PYTHON_EXECUTABLE=/usr/local/bin/python \
 	-D BUILD_EXAMPLES=ON .. \
     && make -j$(nproc) && make install && ldconfig
+
+
+
 RUN mkdir /workspace
 WORKDIR /workspace
 
